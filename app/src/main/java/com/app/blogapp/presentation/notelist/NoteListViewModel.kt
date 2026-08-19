@@ -17,10 +17,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.app.blogapp.domain.usecase.DeleteNoteUseCase
 
 @HiltViewModel
 class NoteListViewModel @Inject constructor(
     private val getNotesUseCase: GetNotesUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -58,13 +60,8 @@ class NoteListViewModel @Inject constructor(
             }
 
             is NoteListContract.Intent.DeleteNoteClicked -> {
-                // TODO(Ejercicio 1): invocar DeleteNoteUseCase(intent.noteId) en viewModelScope.
                 viewModelScope.launch {
-                    _effect.send(
-                        NoteListContract.Effect.ShowMessage(
-                            context.getString(R.string.feature_not_implemented)
-                        )
-                    )
+                    deleteNoteUseCase(intent.noteId)
                 }
             }
         }
