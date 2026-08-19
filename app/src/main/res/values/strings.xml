@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Notas</string>
+
+    <string name="note_list_title">Mis notas</string>
+    <string name="note_list_add_content_description">Nueva nota</string>
+    <string name="note_list_empty_message">Aún no tienes notas</string>
+
+    <string name="note_item_edit_content_description">Editar nota</string>
+    <string name="note_item_delete_content_description">Eliminar nota</string>
+
+    <string name="feature_not_implemented">Esta función todavía no está implementada</string>
+
+    <string name="note_editor_title">Nueva nota</string>
+    <string name="note_editor_back_content_description">Volver</string>
+    <string name="note_editor_save_action">Guardar</string>
+    <string name="note_editor_title_label">Título</string>
+    <string name="note_editor_content_label">Contenido</string>
+</resources>
