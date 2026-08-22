@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -21,6 +22,7 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -131,6 +133,44 @@ fun NoteListScreen(
             }
         }
     }
+
+    state.notePendingDeletion?.let { note ->
+        DeleteNoteConfirmationDialog(
+            note = note,
+            onConfirm = { onIntent(NoteListContract.Intent.ConfirmDeleteClicked) },
+            onDismiss = { onIntent(NoteListContract.Intent.DismissDeleteClicked) }
+        )
+    }
+}
+
+@Composable
+private fun DeleteNoteConfirmationDialog(
+    note: Note,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.note_delete_dialog_title)) },
+        text = {
+            Text(
+                stringResource(
+                    R.string.note_delete_dialog_message,
+                    note.title
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.note_delete_confirm_action))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.note_delete_cancel_action))
+            }
+        }
+    )
 }
 
 @Composable

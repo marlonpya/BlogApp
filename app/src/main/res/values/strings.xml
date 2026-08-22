@@ -7,6 +7,12 @@
 
     <string name="note_item_edit_content_description">Editar nota</string>
     <string name="note_item_delete_content_description">Eliminar nota</string>
+    <string name="note_delete_dialog_title">Eliminar nota</string>
+    <string name="note_delete_dialog_message">¿Quieres eliminar «%1$s»? Esta acción no se puede deshacer.</string>
+    <string name="note_delete_confirm_action">Eliminar</string>
+    <string name="note_delete_cancel_action">Cancelar</string>
+    <string name="note_delete_success_message">Nota eliminada</string>
+    <string name="note_delete_error_message">No se pudo eliminar la nota</string>
 
     <string name="feature_not_implemented">Esta función todavía no está implementada</string>
 

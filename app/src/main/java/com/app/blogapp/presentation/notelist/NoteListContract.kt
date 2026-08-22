@@ -9,7 +9,8 @@ interface NoteListContract {
     data class State(
         val notes: List<Note> = emptyList(),
         val isLoading: Boolean = true,
-        val errorMessage: String? = null
+        val errorMessage: String? = null,
+        val notePendingDeletion: Note? = null
     ) {
         // Derivado: evita que la UI recalcule condiciones de vacío.
         val isEmpty: Boolean get() = !isLoading && notes.isEmpty()
@@ -20,6 +21,8 @@ interface NoteListContract {
         data object CreateNoteClicked : Intent
         data class EditNoteClicked(val noteId: Long) : Intent
         data class DeleteNoteClicked(val noteId: Long) : Intent
+        data object ConfirmDeleteClicked : Intent
+        data object DismissDeleteClicked : Intent
     }
 
     /** Eventos de una sola vez: navegación y mensajes. Nunca viven en el State. */
