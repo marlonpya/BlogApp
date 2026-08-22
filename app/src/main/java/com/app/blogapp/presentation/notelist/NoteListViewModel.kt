@@ -7,6 +7,7 @@ import com.app.blogapp.R
 import com.app.blogapp.domain.usecase.GetNotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,10 +18,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.app.blogapp.domain.usecase.DeleteNoteUseCase
 
 @HiltViewModel
 class NoteListViewModel @Inject constructor(
     private val getNotesUseCase: GetNotesUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -58,14 +61,38 @@ class NoteListViewModel @Inject constructor(
             }
 
             is NoteListContract.Intent.DeleteNoteClicked -> {
-                // TODO(Ejercicio 1): invocar DeleteNoteUseCase(intent.noteId) en viewModelScope.
-                viewModelScope.launch {
-                    _effect.send(
-                        NoteListContract.Effect.ShowMessage(
-                            context.getString(R.string.feature_not_implemented)
-                        )
+                _state.update { state ->
+                    state.copy(
+                        notePendingDeletion = state.notes.find { it.id == intent.noteId }
                     )
                 }
+            }
+
+            is NoteListContract.Intent.ConfirmDeleteClicked -> {
+                val noteId = _state.value.notePendingDeletion?.id ?: return
+                _state.update { it.copy(notePendingDeletion = null) }
+                viewModelScope.launch {
+                    try {
+                        deleteNoteUseCase(noteId)
+                        _effect.send(
+                            NoteListContract.Effect.ShowMessage(
+                                context.getString(R.string.note_delete_success_message)
+                            )
+                        )
+                    } catch (exception: CancellationException) {
+                        throw exception
+                    } catch (_: Exception) {
+                        _effect.send(
+                            NoteListContract.Effect.ShowMessage(
+                                context.getString(R.string.note_delete_error_message)
+                            )
+                        )
+                    }
+                }
+            }
+
+            is NoteListContract.Intent.DismissDeleteClicked -> {
+                _state.update { it.copy(notePendingDeletion = null) }
             }
         }
     }

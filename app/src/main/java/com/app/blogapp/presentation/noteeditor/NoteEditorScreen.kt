@@ -111,7 +111,7 @@ private fun NoteEditorScreenPreview() {
         NoteEditorScreen(
             state = NoteEditorContract.State(
                 title = "Nueva nota",
-                content = "Contenido de ejemplo",
+                content = "Contenido de ejemplo333",
                 isSaveEnabled = true
             ),
             onIntent = {}

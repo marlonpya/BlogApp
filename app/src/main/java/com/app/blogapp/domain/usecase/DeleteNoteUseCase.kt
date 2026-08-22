@@ -17,6 +17,6 @@ class DeleteNoteUseCase @Inject constructor(
     private val repository: NoteRepository
 ) {
     suspend operator fun invoke(id: Long) {
-        TODO("Ejercicio 1: implementar la eliminación de la nota")
+        repository.deleteNote(id)
     }
 }
