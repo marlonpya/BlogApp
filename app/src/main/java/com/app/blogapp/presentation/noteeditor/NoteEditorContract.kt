@@ -7,7 +7,10 @@ interface NoteEditorContract {
     data class State(
         val title: String = "",
         val content: String = "",
-        val isSaveEnabled: Boolean = false
+        val isSaveEnabled: Boolean = false,
+        val isLoading: Boolean = false,
+        val isSaving: Boolean = false,
+        val isEditing: Boolean = false
     )
 
     /** Todo lo que el usuario puede hacer en la pantalla. */

@@ -42,18 +42,13 @@ class NoteListViewModel @Inject constructor(
         when (intent) {
             is NoteListContract.Intent.CreateNoteClicked -> {
                 viewModelScope.launch {
-                    _effect.send(NoteListContract.Effect.NavigateToEditor)
+                    _effect.send(NoteListContract.Effect.NavigateToEditor())
                 }
             }
 
             is NoteListContract.Intent.EditNoteClicked -> {
-                // TODO(Ejercicio 2): navegar al editor con noteId y precargar la nota.
                 viewModelScope.launch {
-                    _effect.send(
-                        NoteListContract.Effect.ShowMessage(
-                            context.getString(R.string.feature_not_implemented)
-                        )
-                    )
+                    _effect.send(NoteListContract.Effect.NavigateToEditor(intent.noteId))
                 }
             }
 

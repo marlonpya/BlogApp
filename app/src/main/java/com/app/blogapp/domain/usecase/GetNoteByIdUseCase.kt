@@ -17,7 +17,5 @@ import javax.inject.Inject
 class GetNoteByIdUseCase @Inject constructor(
     private val repository: NoteRepository
 ) {
-    suspend operator fun invoke(id: Long): Note? {
-        TODO("Ejercicio 2: implementar la carga de la nota por id")
-    }
+    suspend operator fun invoke(id: Long): Note? = repository.getNoteById(id)
 }

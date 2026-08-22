@@ -12,12 +12,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,17 +37,22 @@ fun NoteEditorRoute(
     viewModel: NoteEditorViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is NoteEditorContract.Effect.NavigateBack -> onNavigateBack()
-                is NoteEditorContract.Effect.ShowMessage -> Unit
+                is NoteEditorContract.Effect.ShowMessage -> snackbarHostState.showSnackbar(effect.message)
             }
         }
     }
 
-    NoteEditorScreen(state = state, onIntent = viewModel::onIntent)
+    NoteEditorScreen(
+        state = state,
+        onIntent = viewModel::onIntent,
+        snackbarHostState = snackbarHostState
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,13 +60,21 @@ fun NoteEditorRoute(
 fun NoteEditorScreen(
     state: NoteEditorContract.State,
     onIntent: (NoteEditorContract.Intent) -> Unit,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.note_editor_title)) },
+                title = {
+                    Text(
+                        stringResource(
+                            if (state.isEditing) R.string.note_editor_edit_title
+                            else R.string.note_editor_title
+                        )
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { onIntent(NoteEditorContract.Intent.BackClicked) }) {
                         Icon(
@@ -75,6 +92,11 @@ fun NoteEditorScreen(
                     }
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                Snackbar(snackbarData = data)
+            }
         }
     ) { innerPadding ->
         Column(
@@ -88,12 +110,14 @@ fun NoteEditorScreen(
                 onValueChange = { onIntent(NoteEditorContract.Intent.TitleChanged(it)) },
                 label = { Text(stringResource(R.string.note_editor_title_label)) },
                 singleLine = true,
+                enabled = !state.isLoading && !state.isSaving,
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
                 value = state.content,
                 onValueChange = { onIntent(NoteEditorContract.Intent.ContentChanged(it)) },
                 label = { Text(stringResource(R.string.note_editor_content_label)) },
+                enabled = !state.isLoading && !state.isSaving,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
@@ -114,7 +138,8 @@ private fun NoteEditorScreenPreview() {
                 content = "Contenido de ejemplo",
                 isSaveEnabled = true
             ),
-            onIntent = {}
+            onIntent = {},
+            snackbarHostState = SnackbarHostState()
         )
     }
 }

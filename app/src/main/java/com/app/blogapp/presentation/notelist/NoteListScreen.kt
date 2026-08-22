@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NoteListRoute(
-    onNavigateToEditor: () -> Unit,
+    onNavigateToEditor: (Long?) -> Unit,
     viewModel: NoteListViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -51,7 +51,7 @@ fun NoteListRoute(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is NoteListContract.Effect.NavigateToEditor -> onNavigateToEditor()
+                is NoteListContract.Effect.NavigateToEditor -> onNavigateToEditor(effect.noteId)
                 is NoteListContract.Effect.ShowMessage -> {
                     coroutineScope.launch {
                         snackbarHostState.showSnackbar(effect.message)

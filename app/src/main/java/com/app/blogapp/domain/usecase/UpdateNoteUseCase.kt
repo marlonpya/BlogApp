@@ -18,6 +18,15 @@ class UpdateNoteUseCase @Inject constructor(
     private val repository: NoteRepository
 ) {
     suspend operator fun invoke(note: Note) {
-        TODO("Ejercicio 2: implementar la actualización de la nota")
+        require(note.id > 0) { "La nota a actualizar debe existir" }
+        require(note.title.isNotBlank()) { "El título no puede estar vacío" }
+
+        repository.updateNote(
+            note.copy(
+                title = note.title.trim(),
+                content = note.content.trim(),
+                updatedAt = System.currentTimeMillis()
+            )
+        )
     }
 }

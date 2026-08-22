@@ -11,6 +11,7 @@
     <string name="feature_not_implemented">Esta función todavía no está implementada</string>
 
     <string name="note_editor_title">Nueva nota</string>
+    <string name="note_editor_edit_title">Editar nota</string>
     <string name="note_editor_back_content_description">Volver</string>
     <string name="note_editor_save_action">Guardar</string>
     <string name="note_editor_title_label">Título</string>

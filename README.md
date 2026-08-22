@@ -46,7 +46,7 @@ presentation  →  domain  ←  data
 | --- | --- |
 | Listar notas | ✅ Funcional de punta a punta |
 | Crear nota | ✅ Funcional de punta a punta |
-| Editar nota | ⛔ Botón visible; muestra Snackbar "no implementado" |
+| Editar nota | ✅ Funcional de punta a punta |
 | Eliminar nota | ⛔ Botón visible; muestra Snackbar "no implementado" |
 
 ## Ejercicios pendientes
@@ -61,20 +61,6 @@ presentation  →  domain  ←  data
    `viewModelScope`.
 3. No hace falta recargar la lista a mano: el `Flow` del DAO re-emite solo.
 4. Opcional: pedir confirmación con un `AlertDialog` antes de borrar.
-
-### Ejercicio 2 — Editar
-
-1. Implementar `GetNoteByIdUseCase` y `UpdateNoteUseCase`
-   (`domain/usecase/`): delegar en `NoteRepository.getNoteById(id)` y
-   `NoteRepository.updateNote(note)`, ya implementados en `data`.
-   `UpdateNoteUseCase` debe refrescar `updatedAt` antes de guardar.
-2. En `NoteListViewModel`, hacer que `Intent.EditNoteClicked` navegue al
-   editor con el `noteId` (hoy siempre navega con `noteId = null`).
-3. En `NoteEditorViewModel`, el `noteId` ya se lee de
-   `savedStateHandle.toRoute<Routes.NoteEditorRoute>()`; falta usarlo para
-   invocar `GetNoteByIdUseCase` y precargar el `State` cuando no sea `null`.
-4. Al guardar en modo edición, invocar `UpdateNoteUseCase` en vez de
-   `CreateNoteUseCase`.
 
 ## Stack
 

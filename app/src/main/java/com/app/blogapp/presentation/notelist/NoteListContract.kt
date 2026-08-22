@@ -24,7 +24,7 @@ interface NoteListContract {
 
     /** Eventos de una sola vez: navegación y mensajes. Nunca viven en el State. */
     sealed interface Effect {
-        data object NavigateToEditor : Effect
+        data class NavigateToEditor(val noteId: Long? = null) : Effect
         data class ShowMessage(val message: String) : Effect
     }
 }

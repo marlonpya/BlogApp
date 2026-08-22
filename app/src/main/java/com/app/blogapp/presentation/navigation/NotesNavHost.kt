@@ -17,8 +17,8 @@ fun NotesNavHost() {
     ) {
         composable<Routes.NoteListRoute> {
             NoteListRoute(
-                onNavigateToEditor = {
-                    navController.navigate(Routes.NoteEditorRoute())
+                onNavigateToEditor = { noteId ->
+                    navController.navigate(Routes.NoteEditorRoute(noteId))
                 }
             )
         }
